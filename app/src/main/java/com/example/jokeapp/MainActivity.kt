@@ -25,9 +25,7 @@ class MainActivity : AppCompatActivity() {
         button.setOnClickListener{
             button.isEnabled = false
             progressBar.visibility = View.VISIBLE
-            Log.d("TAG", "onCreate: clicklistener before viewModel.getJoke()")
             viewModel.getJoke()
-            Log.d("TAG", "onCreate: clicklistener after viewModel.getJoke()")
         }
 
         viewModel.init(object : TextCallBack {
@@ -62,7 +60,7 @@ class JokeApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        viewModel = ViewModel(TestModel(BaseResourseManager(this)))
+        viewModel = ViewModel(BaseModel(BaseJokeService(), BaseResourseManager(this)))
         Log.d("TAG", "JokeApp onCreate: ")
     }
 }
