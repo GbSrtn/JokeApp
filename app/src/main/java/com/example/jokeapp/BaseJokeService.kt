@@ -1,5 +1,6 @@
 package com.example.jokeapp
 
+import com.google.gson.Gson
 import java.io.BufferedInputStream
 import java.io.InputStreamReader
 import java.lang.Exception
@@ -7,7 +8,7 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.net.UnknownHostException
 
-class BaseJokeService: JokeService {
+class BaseJokeService(private val gson: Gson): JokeService {
     override fun getJoke(callback: ServiceCallback) {
         Thread {
             var connection: HttpURLConnection? = null
@@ -16,7 +17,8 @@ class BaseJokeService: JokeService {
                 connection = url.openConnection() as HttpURLConnection
                 InputStreamReader(BufferedInputStream(connection.inputStream)).use {
                     val line: String = it.readText()
-                    callback.returnSuccess(line)
+                    val dto = gson.fromJson(line, JokeDTO::class.java)
+                    callback.returnSuccess(dto)
                 }
             } catch (e: Exception) {
                 if (e is UnknownHostException)

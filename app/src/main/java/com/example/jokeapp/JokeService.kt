@@ -5,7 +5,7 @@ interface JokeService {
 }
 
 interface ServiceCallback {
-    fun returnSuccess(data:String)
+    fun returnSuccess(data: JokeDTO)
 
     fun returnError(type: ErrorType)
 }

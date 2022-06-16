@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
+import com.google.gson.Gson
 
 class MainActivity : AppCompatActivity() {
 
@@ -60,7 +61,7 @@ class JokeApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        viewModel = ViewModel(BaseModel(BaseJokeService(), BaseResourseManager(this)))
+        viewModel = ViewModel(BaseModel(BaseJokeService(Gson()), BaseResourseManager(this)))
         Log.d("TAG", "JokeApp onCreate: ")
     }
 }

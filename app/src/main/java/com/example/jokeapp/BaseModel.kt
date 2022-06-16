@@ -10,8 +10,9 @@ class BaseModel(
 
     override fun getJoke() {
         service.getJoke(object : ServiceCallback {
-            override fun returnSuccess(data: String) {
-                callback?.provideSuccess(Joke(data, ""))
+
+            override fun returnSuccess(data: JokeDTO) {
+                callback?.provideSuccess(data.getJoke())
             }
 
             override fun returnError(type: ErrorType) {
