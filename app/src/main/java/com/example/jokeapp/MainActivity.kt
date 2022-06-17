@@ -9,6 +9,8 @@ import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
 import com.google.gson.Gson
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity() {
 
@@ -61,8 +63,12 @@ class JokeApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        viewModel = ViewModel(BaseModel(BaseJokeService(Gson()), BaseResourseManager(this)))
-        Log.d("TAG", "JokeApp onCreate: ")
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://www.google.ru/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        viewModel = ViewModel(BaseModel(retrofit.create(JokeService::class.java), BaseResourseManager(this)))
     }
 }
 
