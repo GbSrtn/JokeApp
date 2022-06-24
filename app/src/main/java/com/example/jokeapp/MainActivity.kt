@@ -33,22 +33,12 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.init(object : TextCallBack {
             override fun provideText(text: String) = runOnUiThread{
-                Log.d("TAG", "provideText: ")
                 button.isEnabled =true
                 progressBar.visibility = View.INVISIBLE
                 textView.text = text
             }
             
         })
-//        viewModel.init(object : TextCallBack {
-//            override fun provideText(text: String) = runOnUiThread {
-//                Log.d("TAG", "provideText: ")
-//                button.isEnabled =true
-//                progressBar.visibility = View.INVISIBLE
-//                Log.d("TAG", "provideText: ")
-//                textView.text = text
-//            }
-//        })
     }
 
     override fun onDestroy() {

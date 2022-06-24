@@ -8,11 +8,6 @@ interface JokeService {
     fun getJoke(): Call<JokeDTO>
 }
 
-interface ServiceCallback {
-    fun returnSuccess(data: JokeDTO)
-
-    fun returnError(type: ErrorType)
-}
 
 enum class ErrorType {
     NO_CONNECTION,
