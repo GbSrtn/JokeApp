@@ -1,8 +1,30 @@
 package com.example.jokeapp
 
-class Joke(private val text: String, private val punchline: String) {
+import androidx.annotation.DrawableRes
 
-    fun getJokeUI() = "$text\n$punchline"
+class BaseJoke(text: String) : Joke(text) {
+    override fun getIconResId() = R.drawable.ic_baseline_favorite_border_24
+}
+
+class FavouriteJoke(text: String) : Joke(text) {
+    override fun getIconResId() = R.drawable.ic_baseline_favorite_24
+}
+
+class FailedJoke(text: String) : Joke(text) {
+    override fun getIconResId() = 0
+}
+
+abstract class Joke(private val text: String) {
+
+    fun getJokeUI() = text
+
+    @DrawableRes
+    abstract fun getIconResId(): Int
+
+    fun map(callBack: DataCallBack) = callBack.run {
+        provideIconResId(getIconResId())
+        provideText(getJokeUI())
+    }
 }
 
 interface JokeFailure {

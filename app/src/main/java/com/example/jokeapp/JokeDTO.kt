@@ -8,5 +8,5 @@ data class JokeDTO(
     @SerializedName("value")
     private val text: String
 ) {
-    fun getJoke() = Joke(text,"")
+    fun toJoke() = BaseJoke(text)
 }

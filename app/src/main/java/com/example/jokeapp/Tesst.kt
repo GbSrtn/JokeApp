@@ -5,15 +5,11 @@ import android.util.Log
 class Tesst {
     var g = 0
 
-
-
-
     val a = Test2(object :doSmt{
         override fun doq(s: Int) {
             
         }
     })
-
 
 }
 

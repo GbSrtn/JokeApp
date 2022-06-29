@@ -4,14 +4,16 @@ import android.util.Log
 
 class ViewModel(private val model: Model) {
 
-    private var callback: TextCallBack? = null
+    private var dataCallback: DataCallBack? = null
 
-    fun init(callback: TextCallBack) {
-        this.callback = callback
-        model.init(object : ResultCallBack {
-            override fun provideSuccess(data: Joke) = callback.provideText(data.getJokeUI())
-
-            override fun provideError(error: JokeFailure) = callback.provideText(error.getMessage())
+    fun init(callback: DataCallBack) {
+        this.dataCallback = callback
+        model.init(object : JokeCallBack {
+            override fun provide(joke: Joke) {
+                dataCallback?.let {
+                    joke.map(it)
+                }
+            }
         })
     }
 
@@ -20,7 +22,7 @@ class ViewModel(private val model: Model) {
     }
 
     fun clear() {
-        callback = null
+        dataCallback = null
         model.clear()
     }
 }

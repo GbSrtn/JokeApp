@@ -3,12 +3,9 @@ package com.example.jokeapp
 import android.app.Application
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.ProgressBar
-import android.widget.TextView
-import com.google.gson.Gson
+import android.widget.*
+import com.example.jokeapp.Test.TestModel
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -20,24 +17,37 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         viewModel = (application as JokeApp).viewModel
-        val button = findViewById<Button>(R.id.actionButton)
         val progressBar = findViewById<ProgressBar>(R.id.progressBar)
         val textView = findViewById<TextView>(R.id.textView)
+        val iconView = findViewById<ImageView>(R.id.iconView)
+
         progressBar.visibility = View.INVISIBLE
 
+
+        val button = findViewById<Button>(R.id.actionButton)
         button.setOnClickListener{
             button.isEnabled = false
             progressBar.visibility = View.VISIBLE
             viewModel.getJoke()
         }
 
-        viewModel.init(object : TextCallBack {
+        val checkBox = findViewById<CheckBox>(R.id.checkBox)
+        checkBox.setOnCheckedChangeListener { _, isChecked ->
+            //viewModel.chooseFavourites(isChecked)
+        }
+
+
+        viewModel.init(object : DataCallBack {
             override fun provideText(text: String) = runOnUiThread{
                 button.isEnabled =true
                 progressBar.visibility = View.INVISIBLE
                 textView.text = text
             }
-            
+
+            override fun provideIconResId(id: Int) = runOnUiThread {
+                iconView.setImageResource(id)
+            }
+
         })
     }
 
@@ -58,7 +68,8 @@ class JokeApp : Application() {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        viewModel = ViewModel(BaseModel(retrofit.create(JokeService::class.java), BaseResourseManager(this)))
+        //viewModel = ViewModel(BaseModel(retrofit.create(JokeService::class.java), BaseResourseManager(this)))
+        viewModel = ViewModel(TestModel(BaseResourseManager(this)))
     }
 }
 

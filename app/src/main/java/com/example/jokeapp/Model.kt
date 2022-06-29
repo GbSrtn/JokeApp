@@ -3,7 +3,7 @@ package com.example.jokeapp
 interface Model {
     fun getJoke()
 
-    fun init(callback: ResultCallBack)
+    fun init(callback: JokeCallBack)
 
     fun clear()
 }

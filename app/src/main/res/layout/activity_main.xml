@@ -8,12 +8,34 @@
     android:orientation="vertical">
 
 
-    <TextView
-        android:id="@+id/textView"
+    <CheckBox
+        android:id="@+id/checkBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        tools:text="Joke or error message" />
+        android:text="@string/show_favourite_joke" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        tools:ignore="UseCompoundDrawables">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            tools:text="Joke or error message" />
+
+        <ImageView
+            android:id="@+id/iconView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            app:srcCompat="@drawable/ic_baseline_favorite_24"
+            android:contentDescription="@string/favourite_base_icon_descr" />
+    </LinearLayout>
 
     <ProgressBar
         android:id="@+id/progressBar"
