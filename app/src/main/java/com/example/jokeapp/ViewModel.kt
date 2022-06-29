@@ -1,20 +1,25 @@
 package com.example.jokeapp
 
-import android.util.Log
-
 class ViewModel(private val model: Model) {
 
-    private var dataCallback: DataCallBack? = null
+    private var dataCallback: DataCallback? = null
 
-    fun init(callback: DataCallBack) {
-        this.dataCallback = callback
-        model.init(object : JokeCallBack {
-            override fun provide(joke: Joke) {
-                dataCallback?.let {
-                    joke.map(it)
-                }
+    private var jokeCallback = object : JokeCallback {
+        override fun provide(joke: Joke) {
+            dataCallback?.let {
+                joke.map(it)
             }
-        })
+        }
+
+    }
+
+    fun init(callback: DataCallback) {
+        dataCallback = callback
+        model.init(jokeCallback)
+    }
+
+    fun changeJokeStatus() {
+        model.changeJokeStatus(jokeCallback)
     }
 
     fun getJoke() {

@@ -21,7 +21,7 @@ abstract class Joke(private val text: String) {
     @DrawableRes
     abstract fun getIconResId(): Int
 
-    fun map(callBack: DataCallBack) = callBack.run {
+    fun map(callBack: DataCallback) = callBack.run {
         provideIconResId(getIconResId())
         provideText(getJokeUI())
     }

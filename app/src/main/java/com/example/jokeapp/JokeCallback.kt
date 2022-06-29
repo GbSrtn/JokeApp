@@ -1,5 +1,5 @@
 package com.example.jokeapp
 
-interface JokeCallBack {
+interface JokeCallback {
     fun provide(joke: Joke)
 }

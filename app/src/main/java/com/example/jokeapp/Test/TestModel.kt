@@ -4,7 +4,7 @@ import com.example.jokeapp.*
 
 class TestModel(resourseManager: ResourseManager) : Model {
 
-    private var callback: JokeCallBack? = null
+    private var callback: JokeCallback? = null
     private var count = 0
     private val noConnection = NoConnection(resourseManager)
     private val serviceUnavailable = ServiceUnavailable(resourseManager)
@@ -22,8 +22,12 @@ class TestModel(resourseManager: ResourseManager) : Model {
         }.start()
     }
 
-    override fun init(callback: JokeCallBack) {
+    override fun init(callback: JokeCallback) {
         this.callback = callback
+    }
+
+    override fun changeJokeStatus(jokeCallback: JokeCallback) {
+        TODO("Not yet implemented")
     }
 
     override fun clear() {

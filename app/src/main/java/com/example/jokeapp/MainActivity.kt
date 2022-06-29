@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.*
+import com.example.jokeapp.Base.BaseModel
+import com.example.jokeapp.Test.TestCacheDataSource
 import com.example.jokeapp.Test.TestModel
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -19,7 +21,11 @@ class MainActivity : AppCompatActivity() {
         viewModel = (application as JokeApp).viewModel
         val progressBar = findViewById<ProgressBar>(R.id.progressBar)
         val textView = findViewById<TextView>(R.id.textView)
-        val iconView = findViewById<ImageView>(R.id.iconView)
+
+        val changeButton = findViewById<ImageView>(R.id.changeButton)
+        changeButton.setOnClickListener {
+            viewModel.changeJokeStatus()
+        }
 
         progressBar.visibility = View.INVISIBLE
 
@@ -37,7 +43,7 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        viewModel.init(object : DataCallBack {
+        viewModel.init(object : DataCallback {
             override fun provideText(text: String) = runOnUiThread{
                 button.isEnabled =true
                 progressBar.visibility = View.INVISIBLE
@@ -45,7 +51,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun provideIconResId(id: Int) = runOnUiThread {
-                iconView.setImageResource(id)
+                changeButton.setImageResource(id)
             }
 
         })
@@ -69,7 +75,10 @@ class JokeApp : Application() {
             .build()
 
         //viewModel = ViewModel(BaseModel(retrofit.create(JokeService::class.java), BaseResourseManager(this)))
-        viewModel = ViewModel(TestModel(BaseResourseManager(this)))
+        //viewModel = ViewModel(TestModel(BaseResourseManager(this)))
+        viewModel = ViewModel(
+            BaseModel(TestCacheDataSource(), TestCloudDataSource(), BaseResourseManager(this))
+        )
     }
 }
 
