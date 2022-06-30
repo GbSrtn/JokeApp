@@ -4,6 +4,6 @@ import retrofit2.Call
 import retrofit2.http.GET
 
 interface JokeService {
-    @GET("https://api.chucknorris.io/jokes/random/")
+    @GET("https://v2.jokeapi.dev/joke/Any?type=twopart")
     fun getJoke(): Call<JokeServerModel>
 }

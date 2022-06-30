@@ -9,6 +9,7 @@ class BaseModel(
 ) : Model {
     private val noConnection by lazy { NoConnection(resourseManager) }
     private val serviceUnavailable by lazy { ServiceUnavailable(resourseManager) }
+    private val noCachedJoke by lazy { NoCacheJokes(resourseManager) }
 
     private var jokeCallback: JokeCallback? = null
 
@@ -20,20 +21,37 @@ class BaseModel(
         }
     }
 
+    private var getJokeFromCache = false
+
+    override fun chooseDataSource(cached: Boolean) {
+        getJokeFromCache = cached
+    }
+
     override fun getJoke() {
-        cloudDataSource.getJoke(object: JokeCloudCallback{
-            override fun provide(joke: JokeServerModel) {
-                cacheJokeServerModel = joke
-                jokeCallback?.provide(joke.toBaseJoke())
-            }
+        if (getJokeFromCache) {
+            cacheDataSource.getJoke(object: JokeCachedCallback{
+                override fun provide(jokeServerModel: JokeServerModel) {
+                    cacheJokeServerModel = jokeServerModel
+                    jokeCallback?.provide(jokeServerModel.toFavouriteJoke())
+                }
+                override fun fail() {
+                    jokeCallback?.provide(FailedJoke(noCachedJoke.getMessage()))
+                }
+            })
+        } else {
+            cloudDataSource.getJoke(object: JokeCloudCallback{
+                override fun provide(joke: JokeServerModel) {
+                    cacheJokeServerModel = joke
+                    jokeCallback?.provide(joke.toBaseJoke())
+                }
+                override fun fail(error: ErrorType) {
+                    cacheJokeServerModel = null
+                    val failure = if (error == ErrorType.NO_CONNECTION) noConnection else serviceUnavailable
+                    jokeCallback?.provide(FailedJoke(failure.getMessage()))
+                }
 
-            override fun fail(error: ErrorType) {
-                cacheJokeServerModel = null
-                val failure = if (error == ErrorType.NO_CONNECTION) noConnection else serviceUnavailable
-                jokeCallback?.provide(FailedJoke(failure.getMessage()))
-            }
-
-        })
+            })
+        }
     }
 
     override fun init(callback: JokeCallback) {

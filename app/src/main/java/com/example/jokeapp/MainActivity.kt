@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
 
         val checkBox = findViewById<CheckBox>(R.id.checkBox)
         checkBox.setOnCheckedChangeListener { _, isChecked ->
-            //viewModel.chooseFavourites(isChecked)
+            viewModel.chooseDataSource(isChecked)
         }
 
 
@@ -77,7 +77,7 @@ class JokeApp : Application() {
         //viewModel = ViewModel(BaseModel(retrofit.create(JokeService::class.java), BaseResourseManager(this)))
         //viewModel = ViewModel(TestModel(BaseResourseManager(this)))
         viewModel = ViewModel(
-            BaseModel(TestCacheDataSource(), TestCloudDataSource(), BaseResourseManager(this))
+            BaseModel(TestCacheDataSource(), BaseCloudDataSource(retrofit.create(JokeService::class.java)), BaseResourseManager(this))
         )
     }
 }

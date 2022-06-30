@@ -13,8 +13,8 @@ class TestModel(resourseManager: ResourseManager) : Model {
         Thread {
             Thread.sleep(1000)
             when (count) {
-                0 -> callback?.provide(BaseJoke("BaseText"))
-                1 -> callback?.provide(FavouriteJoke("FavouriteText"))
+                0 -> callback?.provide(BaseJoke("BaseText", "BasePunchline"))
+                1 -> callback?.provide(FavouriteJoke("FavouriteText", "BasePunchline"))
                 2 -> callback?.provide(FailedJoke(serviceUnavailable.getMessage()))
             }
             count++
@@ -27,6 +27,10 @@ class TestModel(resourseManager: ResourseManager) : Model {
     }
 
     override fun changeJokeStatus(jokeCallback: JokeCallback) {
+        TODO("Not yet implemented")
+    }
+
+    override fun chooseDataSource(cached: Boolean) {
         TODO("Not yet implemented")
     }
 

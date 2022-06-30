@@ -22,6 +22,10 @@ class ViewModel(private val model: Model) {
         model.changeJokeStatus(jokeCallback)
     }
 
+    fun chooseDataSource(favourites: Boolean) {
+        model.chooseDataSource(favourites)
+    }
+
     fun getJoke() {
         model.getJoke()
     }
