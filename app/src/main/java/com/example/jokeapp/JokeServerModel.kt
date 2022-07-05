@@ -17,4 +17,12 @@ data class JokeServerModel(
     fun toBaseJoke() = BaseJoke(text,punchline)
 
     fun toFavouriteJoke() = FavouriteJoke(text,punchline)
+
+    fun toJokeRealm() : JokeRealm {
+        return JokeRealm().also {
+            it.id = id
+            it.text = text
+            it.puchline = punchline
+        }
+    }
 }
