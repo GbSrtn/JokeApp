@@ -5,7 +5,7 @@ class Joke(
     private val text: String,
     private val punchline: String
 ) {
-    fun change(cacheDataSource: CacheDataSource) = cacheDataSource.addOrRemove(id, this)
+    suspend fun change(cacheDataSource: CacheDataSource) = cacheDataSource.addOrRemove(id, this)
 
     fun toBaseJoke() = BaseJokeUiModel(text,punchline)
 
@@ -15,7 +15,7 @@ class Joke(
         return JokeRealm().also {
             it.id = id
             it.text = text
-            it.puchline = punchline
+            it.punchline = punchline
         }
     }
 }

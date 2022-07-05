@@ -6,8 +6,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.*
 import com.example.jokeapp.Base.BaseModel
-import com.example.jokeapp.Test.TestCacheDataSource
-import com.example.jokeapp.Test.TestModel
 import io.realm.Realm
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -45,13 +43,13 @@ class MainActivity : AppCompatActivity() {
 
 
         viewModel.init(object : DataCallback {
-            override fun provideText(text: String) = runOnUiThread{
+            override fun provideText(text: String) {
                 button.isEnabled =true
                 progressBar.visibility = View.INVISIBLE
                 textView.text = text
             }
 
-            override fun provideIconResId(id: Int) = runOnUiThread {
+            override fun provideIconResId(id: Int) {
                 changeButton.setImageResource(id)
             }
 
@@ -80,7 +78,7 @@ class JokeApp : Application() {
 
         viewModel = ViewModel(
             BaseModel(
-                BaseCacheDataSource(Realm.getDefaultInstance()),
+                BaseCacheDataSource(BaseRealmProvider()),
                 BaseCloudDataSource(retrofit.create(JokeService::class.java)),
                 BaseResourseManager(this)
             )

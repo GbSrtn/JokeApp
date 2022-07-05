@@ -1,38 +1,39 @@
 package com.example.jokeapp
 
-class ViewModel(private val model: Model) {
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
+
+class ViewModel(private val model: Model) : ViewModel(){
 
     private var dataCallback: DataCallback? = null
 
-    private var jokeCallback = object : JokeCallback {
-        override fun provide(joke: JokeUiModel) {
-            dataCallback?.let {
-                joke.map(it)
-            }
-        }
-
-    }
-
     fun init(callback: DataCallback) {
         dataCallback = callback
-        model.init(jokeCallback)
     }
 
-    fun changeJokeStatus() {
-        model.changeJokeStatus(jokeCallback)
+    fun changeJokeStatus() = viewModelScope.launch {
+        val uiModel = model.changeJokeStatus()
+        dataCallback?.let {
+            uiModel?.map(it)
+        }
     }
 
     fun chooseDataSource(favourites: Boolean) {
         model.chooseDataSource(favourites)
     }
 
-    fun getJoke() {
-        model.getJoke()
+    fun getJoke() = viewModelScope.launch {
+        val uiModel = model.getJoke()
+        dataCallback?.let {
+            uiModel.map(it)
+        }
+
     }
+
 
     fun clear() {
         dataCallback = null
-        model.clear()
     }
 }
 

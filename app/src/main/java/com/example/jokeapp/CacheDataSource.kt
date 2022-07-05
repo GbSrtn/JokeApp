@@ -1,7 +1,7 @@
 package com.example.jokeapp
 
 interface CacheDataSource {
-    fun getJoke(jokeCachedCallback: JokeCachedCallback)
+    suspend fun getJoke() : Result<Joke, Unit>
 
-    fun addOrRemove(id: Int, joke: Joke) : JokeUiModel
+    suspend fun addOrRemove(id: Int, joke: Joke) : JokeUiModel
 }

@@ -1,34 +1,25 @@
 package com.example.jokeapp
 
+import android.util.Log
 import retrofit2.Call
 import retrofit2.Response
+import java.lang.Exception
 import java.net.UnknownHostException
 
 class BaseCloudDataSource(private val service: JokeService) : CloudDataSource{
 
-    override fun getJoke(callback: JokeCloudCallback) {
-        service.getJoke().enqueue(object: retrofit2.Callback<JokeServerModel> {
-            override fun onResponse(
-                call: Call<JokeServerModel>,
-                response: Response<JokeServerModel>
-            ) {
-                if (response.isSuccessful) {
-                    callback.provide(response.body()!!.toJoke())
-                } else {
-                    callback.fail(ErrorType.SERVICE_UNAVALIABLE)
-                }
+    override suspend fun getJoke(): Result<JokeServerModel, ErrorType> {
+        return try {
+            val result : JokeServerModel = service.getJoke().execute().body()!!
+            Log.d("ThreadLogTag", "currentThread : ${Thread.currentThread().name}")
+            Result.Success(result)
+        } catch (e: Exception) {
+            val errorType = if (e is UnknownHostException) {
+                ErrorType.NO_CONNECTION
+            } else {
+                ErrorType.SERVICE_UNAVALIABLE
             }
-
-            override fun onFailure(call: Call<JokeServerModel>, t: Throwable) {
-                val errorType = if (t is UnknownHostException) {
-                    ErrorType.NO_CONNECTION
-                } else {
-                    ErrorType.SERVICE_UNAVALIABLE
-                }
-                callback.fail(errorType)
-            }
-
-        })
-
+            Result.Error(errorType)
+        }
     }
 }
