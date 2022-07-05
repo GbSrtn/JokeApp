@@ -2,7 +2,6 @@ package com.example.jokeapp
 
 import android.util.Log
 import io.realm.Realm
-import io.realm.kotlin.isValid
 
 class BaseCacheDataSource(private val realm: Realm) : CacheDataSource {
     override fun getJoke(jokeCachedCallback: JokeCachedCallback) {
@@ -13,7 +12,7 @@ class BaseCacheDataSource(private val realm: Realm) : CacheDataSource {
             } else {
                 jokes.random().let { joke ->
                     jokeCachedCallback.provide(
-                        JokeServerModel(
+                        Joke(
                             joke.id,
                             joke.text,
                             joke.puchline
@@ -25,15 +24,15 @@ class BaseCacheDataSource(private val realm: Realm) : CacheDataSource {
         }
     }
 
-    override fun addOrRemove(id: Int, jokeServerModel: JokeServerModel): Joke {
+    override fun addOrRemove(id: Int, joke: Joke): JokeUiModel {
         realm.let {
             val jokeRealm = it.where(JokeRealm::class.java).equalTo("id", id).findFirst()
             return if(jokeRealm == null) {
-                val newJoke = jokeServerModel.toJokeRealm()
+                val newJoke = joke.toJokeRealm()
                 it.executeTransactionAsync { transaction ->
                     transaction.insert(newJoke)
                 }
-                jokeServerModel.toFavouriteJoke()
+                joke.toFavouriteJoke()
             } else {
 
                 Log.d("TAGG", "addOrRemove: ${jokeRealm.id} ")
@@ -49,7 +48,7 @@ class BaseCacheDataSource(private val realm: Realm) : CacheDataSource {
 
                 Log.d("TAGG", "addOrRemove:  BIG JOPA")
 
-                jokeServerModel.toBaseJoke()
+                joke.toBaseJoke()
             }
         }
     }

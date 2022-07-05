@@ -1,7 +1,7 @@
 package com.example.jokeapp
 
 interface JokeCloudCallback {
-    fun provide(joke: JokeServerModel)
+    fun provide(joke: Joke)
     fun fail(error: ErrorType)
 }
 

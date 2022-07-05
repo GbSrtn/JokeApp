@@ -1,45 +1,21 @@
 package com.example.jokeapp
 
-import androidx.annotation.DrawableRes
+class Joke(
+    private val id: Int,
+    private val text: String,
+    private val punchline: String
+) {
+    fun change(cacheDataSource: CacheDataSource) = cacheDataSource.addOrRemove(id, this)
 
-class BaseJoke(text: String, punchline: String) : Joke(text, punchline) {
-    override fun getIconResId() = R.drawable.ic_baseline_favorite_border_24
-}
+    fun toBaseJoke() = BaseJokeUiModel(text,punchline)
 
-class FavouriteJoke(text: String, punchline: String) : Joke(text, punchline) {
-    override fun getIconResId() = R.drawable.ic_baseline_favorite_24
-}
+    fun toFavouriteJoke() = FavouriteJokeUiModel(text,punchline)
 
-class FailedJoke(text: String) : Joke(text, "") {
-    override fun getIconResId() = 0
-}
-
-abstract class Joke(private val text: String, private val punchline: String) {
-
-    fun getJokeUI() = "$text\n$punchline"
-
-    @DrawableRes
-    abstract fun getIconResId(): Int
-
-    fun map(callBack: DataCallback) = callBack.run {
-        provideIconResId(getIconResId())
-        provideText(getJokeUI())
+    fun toJokeRealm() : JokeRealm {
+        return JokeRealm().also {
+            it.id = id
+            it.text = text
+            it.puchline = punchline
+        }
     }
 }
-
-interface JokeFailure {
-    fun getMessage(): String
-}
-
-class NoConnection(private val resourseManager: ResourseManager) : JokeFailure {
-    override fun getMessage() = resourseManager.getString(R.string.no_connection)
-}
-
-class ServiceUnavailable(private val resourseManager: ResourseManager) : JokeFailure {
-    override fun getMessage() = resourseManager.getString(R.string.service_unavaliable)
-}
-
-class NoCacheJokes(private val resourseManager: ResourseManager) : JokeFailure {
-    override fun getMessage() = resourseManager.getString(R.string.no_cache_jokes)
-}
-

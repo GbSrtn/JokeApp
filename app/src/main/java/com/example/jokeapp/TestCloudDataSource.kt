@@ -4,7 +4,7 @@ class TestCloudDataSource : CloudDataSource {
     private var count = 0
 
     override fun getJoke(callback: JokeCloudCallback) {
-        val joke = JokeServerModel(count, "ШУТКАААААААААА${count}", "Добивка${count}")
+        val joke = Joke(count, "ШУТКАААААААААА${count}", "Добивка${count}")
         callback.provide(joke)
         count++
     }
