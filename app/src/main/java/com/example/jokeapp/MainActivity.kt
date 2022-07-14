@@ -69,6 +69,12 @@ class JokeApp : Application() {
     override fun onCreate() {
         super.onCreate()
 
+        val cachedJoke = BaseCachedJoke()
+        val cacheDataSource = BaseCacheDataSource(BaseRealmProvider())
+        val resourseManager = BaseResourseManager(this)
+
+
+
         Realm.init(this)
 
         val retrofit = Retrofit.Builder()
@@ -78,9 +84,17 @@ class JokeApp : Application() {
 
         viewModel = ViewModel(
             BaseModel(
-                BaseCacheDataSource(BaseRealmProvider()),
-                BaseCloudDataSource(retrofit.create(JokeService::class.java)),
-                BaseResourseManager(this)
+                cacheDataSource,
+                CacheResultHandler(
+                    cachedJoke,
+                    cacheDataSource,
+                    NoCachedJokes(resourseManager)),
+                CloudResultHandler(
+                    cachedJoke,
+                    BaseCloudDataSource(retrofit.create(JokeService::class.java)),
+                    NoConnection(resourseManager),
+                    ServiceUnavailable(resourseManager)),
+                cachedJoke
             )
         )
     }

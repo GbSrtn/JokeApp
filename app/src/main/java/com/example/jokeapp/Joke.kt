@@ -4,8 +4,9 @@ class Joke(
     private val id: Int,
     private val text: String,
     private val punchline: String
-) {
-    suspend fun change(cacheDataSource: CacheDataSource) = cacheDataSource.addOrRemove(id, this)
+) : ChangeJoke{
+    override suspend fun change(changeJokeStatus: ChangeJokeStatus) =
+        changeJokeStatus.addOrRemove(id, this)
 
     fun toBaseJoke() = BaseJokeUiModel(text,punchline)
 

@@ -1,5 +1,4 @@
 package com.example.jokeapp
 
-interface CloudDataSource {
-    suspend fun getJoke() : Result<JokeServerModel, ErrorType>
+interface CloudDataSource : JokeDataFetcher<JokeServerModel, ErrorType> {
 }
