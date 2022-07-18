@@ -10,21 +10,20 @@ class FavouriteJokeUiModel(text: String, punchline: String) : JokeUiModel(text, 
     override fun getIconResId() = R.drawable.ic_baseline_favorite_24
 }
 
-class FailedJokeUiModel(text: String) : JokeUiModel(text, "") {
+class FailedJokeUiModel(private val text: String) : JokeUiModel(text, "") {
+    override fun text() = text
     override fun getIconResId() = 0
 }
 
 abstract class JokeUiModel(private val text: String, private val punchline: String) {
 
-    fun text() = "$text\n$punchline"
+    protected open fun text() = "$text\n$punchline"
 
     @DrawableRes
     abstract fun getIconResId(): Int
 
-    fun map(callBack: DataCallback) = callBack.run {
-        provideIconResId(getIconResId())
-        provideText(text())
-    }
+    fun show(communication: Communication) = communication.showState(MainViewModel.State.Initial(text(), getIconResId()))
+    fun getData() = Pair(text(), getIconResId())
 }
 
 interface JokeFailure {

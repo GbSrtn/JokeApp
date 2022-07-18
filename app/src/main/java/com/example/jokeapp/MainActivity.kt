@@ -3,6 +3,7 @@ package com.example.jokeapp
 import android.app.Application
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.*
 import com.example.jokeapp.Base.BaseModel
@@ -12,16 +13,18 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: ViewModel
+    private lateinit var viewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         viewModel = (application as JokeApp).viewModel
-        val progressBar = findViewById<ProgressBar>(R.id.progressBar)
-        val textView = findViewById<TextView>(R.id.textView)
 
-        val changeButton = findViewById<ImageView>(R.id.changeButton)
+        val progressBar = findViewById<CorrectProgress>(R.id.progressBar)
+        val button = findViewById<CorrectButton>(R.id.actionButton)
+        val textView = findViewById<CorrectTextView>(R.id.textView)
+        val changeButton = findViewById<CorrectImageButton>(R.id.changeButton)
+
         changeButton.setOnClickListener {
             viewModel.changeJokeStatus()
         }
@@ -29,10 +32,7 @@ class MainActivity : AppCompatActivity() {
         progressBar.visibility = View.INVISIBLE
 
 
-        val button = findViewById<Button>(R.id.actionButton)
         button.setOnClickListener{
-            button.isEnabled = false
-            progressBar.visibility = View.VISIBLE
             viewModel.getJoke()
         }
 
@@ -41,30 +41,31 @@ class MainActivity : AppCompatActivity() {
             viewModel.chooseDataSource(isChecked)
         }
 
-
-        viewModel.init(object : DataCallback {
-            override fun provideText(text: String) {
-                button.isEnabled =true
-                progressBar.visibility = View.INVISIBLE
-                textView.text = text
-            }
-
-            override fun provideIconResId(id: Int) {
-                changeButton.setImageResource(id)
-            }
-
+        viewModel.observe(
+            this, { state ->
+                state.show(progressBar, button, textView, changeButton)
         })
     }
 
-    override fun onDestroy() {
-        viewModel.clear()
-        super.onDestroy()
+    override fun onPause() {
+        super.onPause()
+        Log.d("MainActivityUniqueTag", "onPause: ")
+    }
+
+    override fun onResume() {
+        Log.d("MainActivityUniqueTag", "onResume: ")
+        super.onResume()
+    }
+
+    override fun onStart() {
+        Log.d("MainActivityUniqueTag", "onStart: ")
+        super.onStart()
     }
 }
 
 class JokeApp : Application() {
 
-    lateinit var viewModel: ViewModel
+    lateinit var viewModel: MainViewModel
 
     override fun onCreate() {
         super.onCreate()
@@ -82,7 +83,7 @@ class JokeApp : Application() {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        viewModel = ViewModel(
+        viewModel = MainViewModel(
             BaseModel(
                 cacheDataSource,
                 CacheResultHandler(
@@ -95,7 +96,8 @@ class JokeApp : Application() {
                     NoConnection(resourseManager),
                     ServiceUnavailable(resourseManager)),
                 cachedJoke
-            )
+            ),
+            BaseCommunication()
         )
     }
 }

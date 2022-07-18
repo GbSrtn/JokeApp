@@ -20,7 +20,7 @@
         android:orientation="horizontal"
         tools:ignore="UseCompoundDrawables">
 
-        <TextView
+        <com.example.jokeapp.CorrectTextView
             android:id="@+id/textView"
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -28,7 +28,7 @@
             android:gravity="center"
             tools:text="Joke or error message" />
 
-        <ImageButton
+        <com.example.jokeapp.CorrectImageButton
             android:background="?selectableItemBackground"
             android:layout_gravity="center_vertical"
             android:id="@+id/changeButton"
@@ -38,19 +38,19 @@
             android:contentDescription="@string/favourite_base_icon_descr" />
     </LinearLayout>
 
-    <ProgressBar
+    <com.example.jokeapp.CorrectProgress
         android:id="@+id/progressBar"
         android:indeterminate="true"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <com.google.android.material.button.MaterialButton
+    <com.example.jokeapp.CorrectButton
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:id="@+id/actionButton"
         android:layout_marginTop="25dp"
         app:cornerRadius="50dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/get_joke"/>
-
 </LinearLayout>
