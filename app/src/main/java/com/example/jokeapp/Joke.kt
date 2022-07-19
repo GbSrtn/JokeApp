@@ -1,22 +1,26 @@
 package com.example.jokeapp
 
-class Joke(
-    private val id: Int,
-    private val text: String,
-    private val punchline: String
-) : ChangeJoke{
-    override suspend fun change(changeJokeStatus: ChangeJokeStatus) =
-        changeJokeStatus.addOrRemove(id, this)
+import com.example.jokeapp.core.Mapper
+import com.example.jokeapp.data.JokeRealm
 
-    fun toBaseJoke() = BaseJokeUiModel(text,punchline)
+sealed class Joke : Mapper<JokeUiModel> {
+    class Success(
+        private val text: String,
+        private val punchline: String,
+        private val favourite: Boolean
+    ) : Joke() {
+        override fun to(): JokeUiModel {
+            return if (favourite) {
+                FavouriteJokeUiModel(text, punchline)
+            } else {
+                BaseJokeUiModel(text, punchline)
+            }
+        }
+    }
 
-    fun toFavouriteJoke() = FavouriteJokeUiModel(text,punchline)
-
-    fun toJokeRealm() : JokeRealm {
-        return JokeRealm().also {
-            it.id = id
-            it.text = text
-            it.punchline = punchline
+    class Failed(private val failure: JokeFailure) : Joke() {
+        override fun to(): JokeUiModel {
+            return FailedJokeUiModel(failure.getMessage())
         }
     }
 }

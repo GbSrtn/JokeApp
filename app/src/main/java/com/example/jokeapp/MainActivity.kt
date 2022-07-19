@@ -6,14 +6,15 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.*
-import com.example.jokeapp.Base.BaseModel
+import com.example.jokeapp.data.*
+import com.example.jokeapp.presentation.BaseCommunication
 import io.realm.Realm
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: MainViewModel
+    private lateinit var viewModel: BaseViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,21 +25,20 @@ class MainActivity : AppCompatActivity() {
         val button = findViewById<CorrectButton>(R.id.actionButton)
         val textView = findViewById<CorrectTextView>(R.id.textView)
         val changeButton = findViewById<CorrectImageButton>(R.id.changeButton)
+        val checkBox = findViewById<CheckBox>(R.id.checkBox)
+
+        progressBar.visibility = View.INVISIBLE
 
         changeButton.setOnClickListener {
             viewModel.changeJokeStatus()
         }
 
-        progressBar.visibility = View.INVISIBLE
-
-
         button.setOnClickListener{
             viewModel.getJoke()
         }
 
-        val checkBox = findViewById<CheckBox>(R.id.checkBox)
         checkBox.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.chooseDataSource(isChecked)
+            viewModel.chooseFavourites(isChecked)
         }
 
         viewModel.observe(
@@ -65,16 +65,10 @@ class MainActivity : AppCompatActivity() {
 
 class JokeApp : Application() {
 
-    lateinit var viewModel: MainViewModel
+    lateinit var viewModel: BaseViewModel
 
     override fun onCreate() {
         super.onCreate()
-
-        val cachedJoke = BaseCachedJoke()
-        val cacheDataSource = BaseCacheDataSource(BaseRealmProvider())
-        val resourseManager = BaseResourseManager(this)
-
-
 
         Realm.init(this)
 
@@ -83,22 +77,14 @@ class JokeApp : Application() {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        viewModel = MainViewModel(
-            BaseModel(
-                cacheDataSource,
-                CacheResultHandler(
-                    cachedJoke,
-                    cacheDataSource,
-                    NoCachedJokes(resourseManager)),
-                CloudResultHandler(
-                    cachedJoke,
-                    BaseCloudDataSource(retrofit.create(JokeService::class.java)),
-                    NoConnection(resourseManager),
-                    ServiceUnavailable(resourseManager)),
-                cachedJoke
-            ),
-            BaseCommunication()
-        )
+        val cachedJoke = BaseCachedJoke()
+        val resourseManager = BaseResourseManager(this)
+        val cacheDataSource = BaseCacheDataSource(BaseRealmProvider(), JokeRealmMapper())
+        val cloudDataSource = NewJokeCloudDataSource(retrofit.create(NewJokeService::class.java))
+        //val cloudDataSource = JokeCloudDataSource(retrofit.create(BaseJokeService::class.java))
+        val repository = BaseJokeRepository(cacheDataSource,cloudDataSource, cachedJoke)
+        val interactor = BaseJokeInteractor(repository, JokeFailureFactory(resourseManager), JokeSuccessMapper())
+        viewModel = BaseViewModel(interactor, BaseCommunication())
     }
 }
 

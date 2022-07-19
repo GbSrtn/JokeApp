@@ -1,5 +1,7 @@
 package com.example.jokeapp
 
-interface JokeDataFetcher<S, E> {
-    suspend fun getJoke(): Result<S, E>
+import com.example.jokeapp.data.JokeDataModel
+
+interface JokeDataFetcher {
+    suspend fun getJoke(): JokeDataModel
 }

@@ -1,7 +1,5 @@
 package com.example.jokeapp
 
-import com.example.jokeapp.Base.BaseModel
-import kotlinx.coroutines.runBlocking
 import org.junit.Test
 
 import org.junit.Assert.*
