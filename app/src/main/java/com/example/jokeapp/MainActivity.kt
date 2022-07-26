@@ -9,6 +9,8 @@ import android.widget.*
 import com.example.jokeapp.data.*
 import com.example.jokeapp.presentation.BaseCommunication
 import io.realm.Realm
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -21,30 +23,43 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         viewModel = (application as JokeApp).viewModel
 
-        val progressBar = findViewById<CorrectProgress>(R.id.progressBar)
-        val button = findViewById<CorrectButton>(R.id.actionButton)
-        val textView = findViewById<CorrectTextView>(R.id.textView)
-        val changeButton = findViewById<CorrectImageButton>(R.id.changeButton)
-        val checkBox = findViewById<CheckBox>(R.id.checkBox)
+//        val progressBar = findViewById<CorrectProgress>(R.id.progressBar)
+//        val button = findViewById<CorrectButton>(R.id.actionButton)
+//        val textView = findViewById<CorrectTextView>(R.id.textView)
+//        val changeButton = findViewById<CorrectImageButton>(R.id.changeButton)
+//        val checkBox = findViewById<CheckBox>(R.id.checkBox)
+//
+//        progressBar.visibility = View.INVISIBLE
+//
+//        changeButton.setOnClickListener {
+//            viewModel.changeJokeStatus()
+//        }
+//
+//        button.setOnClickListener{
+//            viewModel.getJoke()
+//        }
+//
+//        checkBox.setOnCheckedChangeListener { _, isChecked ->
+//            viewModel.chooseFavourites(isChecked)
+//        }
 
-        progressBar.visibility = View.INVISIBLE
-
-        changeButton.setOnClickListener {
-            viewModel.changeJokeStatus()
+        val favouriteDataView = findViewById<FavouriteDataView>(R.id.jokeFavouriteDataView)
+        favouriteDataView.listenChanges { isChecked ->
+            viewModel.chooseFavourites(isChecked)
         }
 
-        button.setOnClickListener{
+        favouriteDataView.handleActionButton {
             viewModel.getJoke()
         }
 
-        checkBox.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.chooseFavourites(isChecked)
+        favouriteDataView.handleChangeButton {
+            viewModel.changeJokeStatus()
         }
 
         viewModel.observe(
             this, { state ->
-                state.show(progressBar, button, textView, changeButton)
-        })
+                favouriteDataView.show(state)
+            })
     }
 
     override fun onPause() {
@@ -70,10 +85,15 @@ class JokeApp : Application() {
     override fun onCreate() {
         super.onCreate()
 
+        val interceptor = HttpLoggingInterceptor()
+        interceptor.level = HttpLoggingInterceptor.Level.BODY
+        val client = OkHttpClient.Builder().addInterceptor(interceptor).build()
+
         Realm.init(this)
 
         val retrofit = Retrofit.Builder()
             .baseUrl("https://www.google.ru/")
+            .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 

@@ -1,56 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:gravity="center"
     android:orientation="vertical">
 
-
-    <CheckBox
-        android:id="@+id/checkBox"
+    <com.example.jokeapp.FavouriteDataView
+        android:id="@+id/jokeFavouriteDataView"
+        custom:actionButtonText="@string/get_joke"
+        custom:checkBoxText="@string/show_favourite_joke"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/show_favourite_joke" />
+        android:layout_height="wrap_content"/>
 
-    <LinearLayout
+    <com.example.jokeapp.FavouriteDataView
+        android:id="@+id/quoteFavouriteDataView"
+        custom:actionButtonText="@string/get_quote"
+        custom:checkBoxText="@string/show_favourite_quote"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        tools:ignore="UseCompoundDrawables">
-
-        <com.example.jokeapp.CorrectTextView
-            android:id="@+id/textView"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            tools:text="Joke or error message" />
-
-        <com.example.jokeapp.CorrectImageButton
-            android:background="?selectableItemBackground"
-            android:layout_gravity="center_vertical"
-            android:id="@+id/changeButton"
-            tools:src="@android:drawable/ic_input_add"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/favourite_base_icon_descr" />
-    </LinearLayout>
-
-    <com.example.jokeapp.CorrectProgress
-        android:id="@+id/progressBar"
-        android:indeterminate="true"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <com.example.jokeapp.CorrectButton
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-        android:id="@+id/actionButton"
-        android:layout_marginTop="25dp"
-        app:cornerRadius="50dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/get_joke"/>
+        android:layout_height="wrap_content"/>
 </LinearLayout>
