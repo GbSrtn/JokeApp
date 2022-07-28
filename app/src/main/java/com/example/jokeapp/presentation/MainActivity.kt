@@ -86,15 +86,14 @@ class JokeApp : Application() {
         val resourseManager = BaseResourseManager(this)
         val realmProvider = BaseRealmProvider()
         val failureHandler = FailureFactory(resourseManager)
-        val mapper = CommonSuccessMapper()
 
         jokeViewModel = BaseViewModel(
             BaseInteractor(
                 BaseRepository(
                     JokeCachedDataSource(realmProvider, JokeRealmMapper(), JokeRealmToCommonDataMapper()),
                     JokeCloudDataSource(retrofit.create(JokeService::class.java)),
-                    BaseCachedData()
-                ), failureHandler, mapper
+                    BaseCachedData<Int>()
+                ), failureHandler, CommonSuccessMapper<Int>()
             ), BaseCommunication()
         )
 
@@ -103,8 +102,8 @@ class JokeApp : Application() {
                 BaseRepository(
                     QuoteCachedDataSource(realmProvider, QuoteRealmMapper(), QuoteRealmToCommonDataMapper()),
                     QuoteCloudDataSource(retrofit.create(QuoteService::class.java)),
-                    BaseCachedData()
-                ), failureHandler, mapper
+                    BaseCachedData<String>()
+                ), failureHandler, CommonSuccessMapper<String>()
             ), BaseCommunication()
         )
     }

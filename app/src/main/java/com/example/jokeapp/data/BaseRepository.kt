@@ -10,16 +10,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.lang.Exception
 
-class BaseRepository(
-    private val cacheDataSource: CacheDataSource,
-    private val cloudDataSource: CloudDataSource,
-    private val cachedJoke: CachedData
-) : CommonRepository {
-    private var currentDataSource : DataFetcher = cloudDataSource
+class BaseRepository<E>(
+    private val cacheDataSource: CacheDataSource<E>,
+    private val cloudDataSource: CloudDataSource<E>,
+    private val cachedJoke: CachedData<E>
+) : CommonRepository<E> {
+    private var currentDataSource : DataFetcher<E> = cloudDataSource
 
-    override suspend fun changeStatus(): CommonDataModel = cachedJoke.change(cacheDataSource)
+    override suspend fun changeStatus(): CommonDataModel<E> = cachedJoke.change(cacheDataSource)
 
-    override suspend fun getCommonItem(): CommonDataModel = withContext(Dispatchers.IO) {
+    override suspend fun getCommonItem(): CommonDataModel<E> = withContext(Dispatchers.IO) {
         try {
             val data = currentDataSource.getData()
             cachedJoke.save(data)
