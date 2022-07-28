@@ -3,17 +3,16 @@ package com.example.jokeapp.presentation
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import com.example.jokeapp.BaseViewModel
-import com.example.jokeapp.Communication
+import com.example.jokeapp.core.presentation.Communication
 
 class BaseCommunication: Communication {
-    private val liveData = MutableLiveData<BaseViewModel.State>()
+    private val liveData = MutableLiveData<State>()
 
-    override fun showState(state: BaseViewModel.State) {
+    override fun showState(state: State) {
         liveData.value = state
     }
 
-    override fun observe(owner: LifecycleOwner, observer: Observer<BaseViewModel.State>) {
+    override fun observe(owner: LifecycleOwner, observer: Observer<State>) {
         liveData.observe(owner, observer)
     }
 

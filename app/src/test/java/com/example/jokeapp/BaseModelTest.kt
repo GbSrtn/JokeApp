@@ -1,9 +1,5 @@
 package com.example.jokeapp
 
-import com.example.jokeapp.data.CacheDataSource
-import com.example.jokeapp.data.CloudDataSource
-import com.example.jokeapp.data.JokeServerModel
-
 
 //class BaseModelTest {
 //    @Test

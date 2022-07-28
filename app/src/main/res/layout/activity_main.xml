@@ -6,14 +6,14 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <com.example.jokeapp.FavouriteDataView
+    <com.example.jokeapp.presentation.FavouriteDataView
         android:id="@+id/jokeFavouriteDataView"
         custom:actionButtonText="@string/get_joke"
         custom:checkBoxText="@string/show_favourite_joke"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <com.example.jokeapp.FavouriteDataView
+    <com.example.jokeapp.presentation.FavouriteDataView
         android:id="@+id/quoteFavouriteDataView"
         custom:actionButtonText="@string/get_quote"
         custom:checkBoxText="@string/show_favourite_quote"

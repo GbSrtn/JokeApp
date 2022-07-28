@@ -6,7 +6,7 @@
     <string name="service_unavaliable">Service Unavailable</string>
     <string name="show_favourite_joke">Show favourite joke</string>
     <string name="show_favourite_quote">Show favourite quote</string>
-    <string name="no_cache_jokes">No favourite jokes! Add one!</string>
+    <string name="no_cache_data">No favourites! Add one by heart icon!</string>
     <string name="favourite_base_icon_descr">Favourite/Base icon</string>
     <string name="generic_fail_message">Generic Fail Message</string>
 </resources>
