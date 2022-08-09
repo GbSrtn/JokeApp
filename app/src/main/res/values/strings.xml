@@ -9,4 +9,6 @@
     <string name="no_cache_data">No favourites! Add one by heart icon!</string>
     <string name="favourite_base_icon_descr">Favourite/Base icon</string>
     <string name="generic_fail_message">Generic Fail Message</string>
+    <string name="yes">Yes</string>
+    <string name="remove_from_favourites">Remove from favourites?</string>
 </resources>

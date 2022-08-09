@@ -17,6 +17,10 @@ class BaseRepository<E>(
 ) : CommonRepository<E> {
     private var currentDataSource : DataFetcher<E> = cloudDataSource
 
+    override fun chooseDataSource(cached: Boolean) {
+        currentDataSource = if (cached) cacheDataSource else cloudDataSource
+    }
+
     override suspend fun changeStatus(): CommonDataModel<E> = cachedJoke.change(cacheDataSource)
 
     override suspend fun getCommonItem(): CommonDataModel<E> = withContext(Dispatchers.IO) {
@@ -30,7 +34,14 @@ class BaseRepository<E>(
         }
     }
 
-    override fun chooseDataSource(cached: Boolean) {
-        currentDataSource = if (cached) cacheDataSource else cloudDataSource
+    override suspend fun getCommonItemList(): List<CommonDataModel<E>> =
+        withContext(Dispatchers.IO) {
+            cacheDataSource.getDataList()
     }
+
+    override suspend fun removeItem(id: E) {
+        cacheDataSource.remove(id)
+    }
+
+
 }

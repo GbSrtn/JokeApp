@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.CheckBox
 import android.widget.LinearLayout
 import com.example.jokeapp.R
+import com.example.jokeapp.core.presentation.CommonItemViewModel
 import com.example.jokeapp.presentation.customViews.CorrectButton
 import com.example.jokeapp.presentation.customViews.CorrectImageButton
 import com.example.jokeapp.presentation.customViews.CorrectProgress
@@ -74,7 +75,7 @@ class FavouriteDataView : LinearLayout {
 
     fun show(state: State) = state.show(progress, actionButton,textView,changeButton)
 
-    fun linkWith(commonViewModel: BaseViewModel) {
+    fun linkWith(commonViewModel: CommonItemViewModel) {
         checkBox.setOnCheckedChangeListener { _, isChecked ->
             commonViewModel.chooseFavourites(isChecked)
         }
